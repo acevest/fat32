@@ -49,9 +49,9 @@ func main() {
 	var mbr fat32.MBR
 	mbr.Read(sector)
 
-	log.Printf("%x", mbr.PTEs[0].StartLBA*512)
+	log.Printf("%x", mbr.PTE.StartLBA*512)
 
-	pos, err := file.Seek(int64(mbr.PTEs[0].StartLBA*512), 0)
+	pos, err := file.Seek(int64(mbr.PTE.StartLBA*512), 0)
 	if err != nil {
 		log.Printf("read DBR error: %v", err)
 	}

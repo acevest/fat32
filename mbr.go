@@ -10,7 +10,6 @@
 package fat32
 
 import (
-	"encoding/binary"
 	"fmt"
 	"log"
 )
@@ -22,7 +21,8 @@ const (
 )
 
 type MBR struct {
-	PTEs []PartitionTableEntry
+	PTE  PartitionTableEntry
+	ptes []PartitionTableEntry
 }
 
 func (m *MBR) Read(sector []byte) {
@@ -34,8 +34,9 @@ func (m *MBR) Read(sector []byte) {
 
 		ignore := ""
 		if pte.Type == PartitionTypeFat32 {
-			m.PTEs = append(m.PTEs, pte)
+			m.ptes = append(m.ptes, pte)
 			ignore = "[KEEPED]"
+			m.PTE = pte
 		} else {
 			ignore = "[ignored]"
 		}
@@ -72,23 +73,25 @@ type PartitionType uint8
 type SectorCylinder uint16
 
 const (
-	PartitionTypeUnused  PartitionType = 0x00
-	PartitionTypeFat16   PartitionType = 0x06
-	PartitionTypeFat32   PartitionType = 0x0B
-	PartitionTypeExtend  PartitionType = 0x05
-	PartitionTypeNTFS    PartitionType = 0x07
-	PartitionTypeLBAMode PartitionType = 0x0F
-	PartitionTypeLinux   PartitionType = 0x83
+	PartitionTypeUnused   PartitionType = 0x00
+	PartitionTypeFat16    PartitionType = 0x06
+	PartitionTypeFat32    PartitionType = 0x0B
+	PartitionTypeFat32LBA PartitionType = 0x0C
+	PartitionTypeExtend   PartitionType = 0x05
+	PartitionTypeNTFS     PartitionType = 0x07
+	PartitionTypeLBAMode  PartitionType = 0x0F
+	PartitionTypeLinux    PartitionType = 0x83
 )
 
 var PartitionTypeMap = map[PartitionType]string{
-	PartitionTypeUnused:  "Unused",
-	PartitionTypeFat16:   "Fat16",
-	PartitionTypeFat32:   "Fat32",
-	PartitionTypeExtend:  "Extend",
-	PartitionTypeNTFS:    "NTFS",
-	PartitionTypeLBAMode: "LBAMode",
-	PartitionTypeLinux:   "Linux",
+	PartitionTypeUnused:   "Unused",
+	PartitionTypeFat16:    "Fat16",
+	PartitionTypeFat32:    "Fat32",
+	PartitionTypeFat32LBA: "Fat32(LBA)",
+	PartitionTypeExtend:   "Extend",
+	PartitionTypeNTFS:     "NTFS",
+	PartitionTypeLBAMode:  "LBAMode",
+	PartitionTypeLinux:    "Linux",
 }
 
 func (g PartitionType) String() string {
@@ -98,5 +101,3 @@ func (g PartitionType) String() string {
 
 	return "NULL"
 }
-
-var bin = binary.LittleEndian

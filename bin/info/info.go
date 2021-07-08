@@ -10,7 +10,6 @@
 package main
 
 import (
-	"bufio"
 	"encoding/binary"
 	"fat32"
 	"flag"
@@ -35,51 +34,51 @@ func main() {
 	}
 	defer file.Close()
 
-	reader := bufio.NewReader(file)
-
-	sector := make([]byte, 512)
-	n, err := reader.Read(sector)
-	if err != nil {
-		log.Fatalf("read MBR fail: %v", err)
-	}
-	if n != len(sector) {
-		log.Fatalf("not 512 bytes")
-	}
-
-	var mbr fat32.MBR
-	mbr.Read(sector)
-
-	log.Printf("%x", mbr.PTE.StartLBA*512)
-
-	pos, err := file.Seek(int64(mbr.PTE.StartLBA*512), 0)
-	if err != nil {
-		log.Printf("read DBR error: %v", err)
-	}
-	log.Printf("pos : %v", pos)
-	reader = bufio.NewReader(file)
-	n, err = reader.Read(sector)
-	if err != nil {
-		log.Fatalf("read DBR fail: %v", err)
-	}
-	if n != len(sector) {
-		log.Fatalf("not 512 bytes")
-	}
-
-	var dbr fat32.DBR
-
-	dbr.Read(sector)
-
-	log.Printf("%x", sector)
-
-	log.Printf("DBR: \n%v", dbr)
-	// for i := 0; i < fat32.GPTEntryCount; i++ {
-	// 	gptType := fat32.PartitionType(bin.Uint16(sector[fat32.GPTPos+i*fat32.PTESize+fat32.PTETypeOffset:]))
-	// 	lba := bin.Uint32(sector[fat32.GPTPos+i*fat32.PTESize+fat32.PTEStartLBAOffset:])
-	// 	totalSectors := bin.Uint32(sector[fat32.GPTPos+i*fat32.PTESize+fat32.PTETotalSectorsOffset:])
-	// 	log.Printf("PartitionTableEntry[%d] type: %v LBA: 0x%08X %d total sectors: 0x%08X %d", i, gptType, lba, lba, totalSectors, totalSectors)
+	// sector := make([]byte, 512)
+	// n, err := file.ReadAt(sector, 0)
+	// if err != nil {
+	// 	log.Fatalf("read MBR fail: %v", err)
+	// }
+	// if n != len(sector) {
+	// 	log.Fatalf("not 512 bytes")
 	// }
 
-	//log.Printf("%x", sector)
+	fs := fat32.Fat32{
+		File: file,
+	}
+
+	err = fs.ReadFAT()
+	if err != nil {
+		log.Fatalf("aaa %v", err)
+	}
+
+	//log.Printf("DBR: \n%v")
+
+	// var mbr fat32.MBR
+	// mbr.Read(sector)
+
+	// log.Printf("%x", mbr.PTE.StartLBA*512)
+
+	// pos, err := file.Seek(int64(mbr.PTE.StartLBA*512), 0)
+	// if err != nil {
+	// 	log.Printf("read DBR error: %v", err)
+	// }
+	// log.Printf("pos : %v", pos)
+	// n, err = file.ReadAt(sector, 0)
+	// if err != nil {
+	// 	log.Fatalf("read DBR fail: %v", err)
+	// }
+	// if n != len(sector) {
+	// 	log.Fatalf("not 512 bytes")
+	// }
+
+	// var dbr fat32.DBR
+
+	// dbr.Read(sector)
+
+	// log.Printf("%x", sector)
+
+	// log.Printf("DBR: \n%v", dbr)
 }
 
 var bin = binary.LittleEndian

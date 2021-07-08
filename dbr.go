@@ -15,16 +15,16 @@ import (
 )
 
 const (
-	offsetBytesPerSector     Offset = 0x0B // 2字节
-	offsetSectorsPerCluster  Offset = 0x0D // 1字节
-	offsetReservedSectors    Offset = 0x0E // 2字节，相对于第0个扇区来说，不是FAT32的第0个扇区
-	offsetFatTableCount      Offset = 0x10 // 1字节
-	offsetHidenSectorCount   Offset = 0x1C // 4字节
-	offsetFsTotalSectorCount Offset = 0x20 // 4字节
-	offsetSectorsPerFatTable Offset = 0x24 // 4字节，每个FAT表占用的扇区数
-	offsetRootClusterNum     Offset = 0x2C // 4字节，根目录所在第一个簇的簇号
-	offsetFsInfoSectorNum    Offset = 0x30 // 2字节，FSINFO扇区号
-	offsetLabel              Offset = 0x47 // 11字节
+	offsetBytesPerSector     = 0x0B // 2字节
+	offsetSectorsPerCluster  = 0x0D // 1字节
+	offsetReservedSectors    = 0x0E // 2字节，相对于第0个扇区来说，不是FAT32的第0个扇区
+	offsetFatTableCount      = 0x10 // 1字节
+	offsetHidenSectorCount   = 0x1C // 4字节
+	offsetFsTotalSectorCount = 0x20 // 4字节
+	offsetSectorsPerFatTable = 0x24 // 4字节，每个FAT表占用的扇区数
+	offsetRootClusterNum     = 0x2C // 4字节，根目录所在第一个簇的簇号
+	offsetFsInfoSectorNum    = 0x30 // 2字节，FSINFO扇区号
+	offsetLabel              = 0x47 // 11字节
 
 	labelLength = 11
 )

@@ -15,44 +15,44 @@ import (
 )
 
 const (
-	bytesPerSectorOffset     = 0x0B // 2字节
-	sectorsPerClusterOffset  = 0x0D // 1字节
-	reservedSectorsOffset    = 0x0E // 2字节，相对于第0个扇区来说，不是FAT32的第0个扇区
-	fatTableCountOffset      = 0x10 // 1字节
-	hidenSectorCountOffset   = 0x1C // 4字节
-	fsTotalSectorCountOffset = 0x20 // 4字节
-	sectorsPerFatTableOffset = 0x24 // 4字节，每个FAT表占用的扇区数
-	rootClusterNumOffset     = 0x2C // 4字节，根目录所在第一个簇的簇号
-	fsInfoSectorNumOffset    = 0x30 // 2字节，FSINFO扇区号
-	labelOffset              = 0x47 // 11字节
+	offsetBytesPerSector     Offset = 0x0B // 2字节
+	offsetSectorsPerCluster  Offset = 0x0D // 1字节
+	offsetReservedSectors    Offset = 0x0E // 2字节，相对于第0个扇区来说，不是FAT32的第0个扇区
+	offsetFatTableCount      Offset = 0x10 // 1字节
+	offsetHidenSectorCount   Offset = 0x1C // 4字节
+	offsetFsTotalSectorCount Offset = 0x20 // 4字节
+	offsetSectorsPerFatTable Offset = 0x24 // 4字节，每个FAT表占用的扇区数
+	offsetRootClusterNum     Offset = 0x2C // 4字节，根目录所在第一个簇的簇号
+	offsetFsInfoSectorNum    Offset = 0x30 // 2字节，FSINFO扇区号
+	offsetLabel              Offset = 0x47 // 11字节
 
 	labelLength = 11
 )
 
 type DBR struct {
-	BytesPerSector     uint16
-	SectorsPerCluster  uint8
-	ReservedSectors    uint16
-	FatTableCount      uint8
-	HidenSectorCount   uint32
-	FsTotalSectorCount uint32
-	SectorsPerFatTable uint32
-	RootClusterNum     uint32
-	FsInfoSectorNum    uint16
+	BytesPerSector     Int
+	SectorsPerCluster  Int
+	ReservedSectors    Int
+	FatTableCount      Int
+	HidenSectorCount   Int
+	FsTotalSectorCount Int
+	SectorsPerFatTable Int
+	RootClusterNum     Int
+	FsInfoSectorNum    Int
 	Label              string
 }
 
 func (d *DBR) Read(sector []byte) {
-	d.BytesPerSector = bin.Uint16(sector[bytesPerSectorOffset:])
-	d.SectorsPerCluster = uint8(sector[sectorsPerClusterOffset])
-	d.ReservedSectors = bin.Uint16(sector[reservedSectorsOffset:])
-	d.FatTableCount = uint8(sector[fatTableCountOffset])
-	d.HidenSectorCount = bin.Uint32(sector[hidenSectorCountOffset:])
-	d.FsInfoSectorNum = uint16(bin.Uint32(sector[fsInfoSectorNumOffset:]))
-	d.SectorsPerFatTable = bin.Uint32(sector[sectorsPerFatTableOffset:])
-	d.RootClusterNum = bin.Uint32(sector[rootClusterNumOffset:])
-	d.FsInfoSectorNum = bin.Uint16(sector[fsInfoSectorNumOffset:])
-	d.Label = string(sector[labelOffset : labelOffset+labelLength])
+	d.BytesPerSector = Bin.Uint16(sector[offsetBytesPerSector:])
+	d.SectorsPerCluster = Int(sector[offsetSectorsPerCluster])
+	d.ReservedSectors = Bin.Uint16(sector[offsetReservedSectors:])
+	d.FatTableCount = Int(sector[offsetFatTableCount])
+	d.HidenSectorCount = Bin.Uint32(sector[offsetHidenSectorCount:])
+	d.FsTotalSectorCount = Bin.Uint32(sector[offsetFsTotalSectorCount:])
+	d.SectorsPerFatTable = Bin.Uint32(sector[offsetSectorsPerFatTable:])
+	d.RootClusterNum = Bin.Uint32(sector[offsetRootClusterNum:])
+	d.FsInfoSectorNum = Bin.Uint16(sector[offsetFsInfoSectorNum:])
+	d.Label = string(sector[offsetLabel : offsetLabel+labelLength])
 	d.Label = strings.TrimSuffix(d.Label, " ")
 }
 

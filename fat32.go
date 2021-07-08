@@ -9,14 +9,13 @@
 
 package fat32
 
-import "encoding/binary"
-
 type Fat32 struct {
 	Mbr MBR
 	Dbr DBR
 }
 
 type Offset uint64
+type Int uint64
 
 func (f Fat32) GetFATAreaOffset() Offset {
 	sectorSize := f.Dbr.BytesPerSector
@@ -32,5 +31,3 @@ func (f Fat32) GetDataAreaOffset() Offset {
 	offset += Offset(f.Dbr.SectorsPerFatTable) * Offset(f.Dbr.FatTableCount) * Offset(f.Dbr.BytesPerSector)
 	return offset
 }
-
-var bin = binary.LittleEndian

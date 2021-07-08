@@ -28,7 +28,7 @@ type MBR struct {
 func (m *MBR) Read(sector []byte) {
 	for i := 0; i < GPTEntryCount; i++ {
 		var pte PartitionTableEntry
-		pte.Type = PartitionType(bin.Uint16(sector[GPTPos+i*PTESize+PTETypeOffset:]))
+		pte.Type = PartitionType(Bin.Uint16(sector[GPTPos+i*PTESize+PTETypeOffset:]))
 		pte.StartLBA = bin.Uint32(sector[GPTPos+i*PTESize+PTEStartLBAOffset:])
 		pte.TotalSectors = bin.Uint32(sector[GPTPos+i*PTESize+PTETotalSectorsOffset:])
 
